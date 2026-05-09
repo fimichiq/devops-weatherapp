@@ -1,10 +1,9 @@
-import type { Route } from "./+types/home";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { getWeatherForCity } from "../../features/weather/api";
 import type { Weather } from "../../features/weather/types";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Weather App" },
     { name: "description", content: "Check current weather by city" },

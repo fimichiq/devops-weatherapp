@@ -9,7 +9,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
  * @param apiResponse response from backend API
  * @returns Weather object representing weather in this area
  */
-function mapApiResponseToWeatherData(apiResponse: any) {
+function mapApiResponseToWeatherData(apiResponse: Weather) {
     const temperature : number = apiResponse.temperature;
     const summary : string = apiResponse.summary;
     return {
