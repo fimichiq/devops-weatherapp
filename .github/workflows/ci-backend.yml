@@ -6,11 +6,18 @@ on:
       - 'src/backend/**'
       - '.github/workflows/ci-backend.yml'
   push:
-    branches: [master]
+    branches: [master, dev]
     paths:
       - 'src/backend/**'
       - '.github/workflows/ci-backend.yml'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        type: choice
+        required: true
+        options: [dev, prod]
+        default: dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,7 +51,8 @@ jobs:
 
   build-push:
     needs: lint-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'))
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/master' && 'prod' || 'dev') }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write

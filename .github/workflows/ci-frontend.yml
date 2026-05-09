@@ -6,11 +6,18 @@ on:
       - 'src/frontend/**'
       - '.github/workflows/ci-frontend.yml'
   push:
-    branches: [master]
+    branches: [master, dev]
     paths:
       - 'src/frontend/**'
       - '.github/workflows/ci-frontend.yml'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        type: choice
+        required: true
+        options: [dev, prod]
+        default: dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,7 +52,8 @@ jobs:
 
   build-push:
     needs: lint-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'))
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/master' && 'prod' || 'dev') }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -81,7 +89,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            VITE_BACKEND_URL=
+            VITE_BACKEND_URL=${{ vars.VITE_BACKEND_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
