@@ -1,6 +1,7 @@
-import httpx
 import sys
 from pathlib import Path
+
+import httpx
 from fastapi.testclient import TestClient
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -27,7 +28,9 @@ class FakeResponse:
 
 
 class FakeAsyncClient:
-    def __init__(self, response: FakeResponse | None = None, request_error: Exception | None = None):
+    def __init__(
+        self, response: FakeResponse | None = None, request_error: Exception | None = None
+    ):
         self._response = response
         self._request_error = request_error
 
