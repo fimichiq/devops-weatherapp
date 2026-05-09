@@ -17,6 +17,16 @@ Simple backend API that proxies weather requests to Meteosource.
 
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
+## Linting
+
+Install dev dependencies:
+
+   .venv/bin/pip install -r requirements-dev.txt
+
+Run linter:
+
+   .venv/bin/ruff check .
+
 ## Endpoints
 
 - GET /health

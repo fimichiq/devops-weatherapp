@@ -3,6 +3,11 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig({
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
-});
+export default defineConfig(({ mode }) => ({
+  plugins: [tailwindcss(), ...(mode === "test" ? [] : [reactRouter()]), tsconfigPaths()],
+  test: {
+    environment: "jsdom",
+    setupFiles: "./app/test/setup.ts",
+    globals: true,
+  },
+}));
